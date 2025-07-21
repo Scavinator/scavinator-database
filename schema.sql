@@ -131,6 +131,7 @@ CREATE TABLE public.items (
     updated_at timestamp without time zone NOT NULL,
     list_category_id bigint,
     status public.item_status,
+    submission_summary text,
     CONSTRAINT list_category_or_page_number CHECK ((NOT ((page_number IS NULL) AND (list_category_id IS NULL))))
 );
 
