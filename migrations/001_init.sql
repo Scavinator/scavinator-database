@@ -24,7 +24,7 @@ CREATE TABLE team_users (
 	approved BOOLEAN NOT NULL,
 	invited BOOLEAN NOT NULL,
 	team_id BIGINT REFERENCES teams,
-	user_id BIGINT REFERENCES teams,
+	user_id BIGINT REFERENCES users,
 
 	CONSTRAINT team_users_unique UNIQUE (team_id, user_id),
 
