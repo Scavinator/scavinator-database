@@ -2,8 +2,10 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 17.4
--- Dumped by pg_dump version 17.4
+\restrict nmUyfDaayp7fRGhyMDPSz2ZJd96ALR6cbhg3aCYYS3Ehl3kn1ogcOPxn17Valsj
+
+-- Dumped from database version 18.0
+-- Dumped by pg_dump version 18.0
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -520,8 +522,7 @@ ALTER SEQUENCE public.team_tags_id_seq OWNED BY public.team_tags.id;
 CREATE TABLE public.team_users (
     id bigint NOT NULL,
     captain boolean DEFAULT false NOT NULL,
-    approved boolean NOT NULL,
-    invited boolean NOT NULL,
+    approved boolean,
     team_id bigint,
     user_id bigint,
     created_at timestamp without time zone NOT NULL,
@@ -1225,10 +1226,12 @@ ALTER TABLE ONLY public.team_users
 --
 
 ALTER TABLE ONLY public.team_users
-    ADD CONSTRAINT team_users_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.teams(id);
+    ADD CONSTRAINT team_users_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
 
 
 --
 -- PostgreSQL database dump complete
 --
+
+\unrestrict nmUyfDaayp7fRGhyMDPSz2ZJd96ALR6cbhg3aCYYS3Ehl3kn1ogcOPxn17Valsj
 
