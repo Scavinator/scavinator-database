@@ -2,10 +2,10 @@
 -- PostgreSQL database dump
 --
 
-\restrict nmUyfDaayp7fRGhyMDPSz2ZJd96ALR6cbhg3aCYYS3Ehl3kn1ogcOPxn17Valsj
+\restrict qoMq8cJVqPZdbyb0lTSBpaPqbLbtxbNOKEQhYOlEo6bx5G95gdSuJ4ap1DPiCqy
 
--- Dumped from database version 18.0
--- Dumped by pg_dump version 18.0
+-- Dumped from database version 18.3
+-- Dumped by pg_dump version 18.3
 
 SET statement_timeout = 0;
 SET lock_timeout = 0;
@@ -40,6 +40,38 @@ CREATE TYPE public.item_status AS ENUM (
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
+
+--
+-- Name: item_events; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.item_events (
+    id bigint NOT NULL,
+    item_id bigint NOT NULL,
+    date timestamp without time zone NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: item_events_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.item_events_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: item_events_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.item_events_id_seq OWNED BY public.item_events.id;
+
 
 --
 -- Name: item_integrations; Type: TABLE; Schema: public; Owner: -
@@ -134,6 +166,10 @@ CREATE TABLE public.items (
     list_category_id bigint,
     status public.item_status,
     submission_summary text,
+    points_text text,
+    points_value integer,
+    digital_submission boolean NOT NULL,
+    special_formatting boolean NOT NULL,
     CONSTRAINT list_category_or_page_number CHECK ((NOT ((page_number IS NULL) AND (list_category_id IS NULL))))
 );
 
@@ -342,6 +378,40 @@ CREATE SEQUENCE public.sessions_id_seq
 --
 
 ALTER SEQUENCE public.sessions_id_seq OWNED BY public.sessions.id;
+
+
+--
+-- Name: team_auths; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.team_auths (
+    id bigint NOT NULL,
+    team_id bigint,
+    creator_id bigint NOT NULL,
+    created_for_url text,
+    key text NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: team_auths_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.team_auths_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: team_auths_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.team_auths_id_seq OWNED BY public.team_auths.id;
 
 
 --
@@ -619,6 +689,13 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+-- Name: item_events id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.item_events ALTER COLUMN id SET DEFAULT nextval('public.item_events_id_seq'::regclass);
+
+
+--
 -- Name: item_tags id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -675,6 +752,13 @@ ALTER TABLE ONLY public.sessions ALTER COLUMN id SET DEFAULT nextval('public.ses
 
 
 --
+-- Name: team_auths id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_auths ALTER COLUMN id SET DEFAULT nextval('public.team_auths_id_seq'::regclass);
+
+
+--
 -- Name: team_integrations id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -728,6 +812,14 @@ ALTER TABLE ONLY public.teams ALTER COLUMN id SET DEFAULT nextval('public.teams_
 --
 
 ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_id_seq'::regclass);
+
+
+--
+-- Name: item_events item_events_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.item_events
+    ADD CONSTRAINT item_events_pkey PRIMARY KEY (id);
 
 
 --
@@ -840,6 +932,22 @@ ALTER TABLE ONLY public.scav_hunts
 
 ALTER TABLE ONLY public.sessions
     ADD CONSTRAINT sessions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: team_auths team_auths_key_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_auths
+    ADD CONSTRAINT team_auths_key_key UNIQUE (key);
+
+
+--
+-- Name: team_auths team_auths_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_auths
+    ADD CONSTRAINT team_auths_pkey PRIMARY KEY (id);
 
 
 --
@@ -1038,6 +1146,14 @@ CREATE UNIQUE INDEX team_scav_hunt_list_category_item_number_unique ON public.it
 
 
 --
+-- Name: item_events item_events_item_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.item_events
+    ADD CONSTRAINT item_events_item_id_fkey FOREIGN KEY (item_id) REFERENCES public.items(id);
+
+
+--
 -- Name: item_integrations item_integrations_item_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1142,6 +1258,22 @@ ALTER TABLE ONLY public.sessions
 
 
 --
+-- Name: team_auths team_auths_creator_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_auths
+    ADD CONSTRAINT team_auths_creator_id_fkey FOREIGN KEY (creator_id) REFERENCES public.users(id);
+
+
+--
+-- Name: team_auths team_auths_team_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.team_auths
+    ADD CONSTRAINT team_auths_team_id_fkey FOREIGN KEY (team_id) REFERENCES public.teams(id);
+
+
+--
 -- Name: team_integrations team_integrations_team_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1233,5 +1365,5 @@ ALTER TABLE ONLY public.team_users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict nmUyfDaayp7fRGhyMDPSz2ZJd96ALR6cbhg3aCYYS3Ehl3kn1ogcOPxn17Valsj
+\unrestrict qoMq8cJVqPZdbyb0lTSBpaPqbLbtxbNOKEQhYOlEo6bx5G95gdSuJ4ap1DPiCqy
 
