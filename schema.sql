@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict qoMq8cJVqPZdbyb0lTSBpaPqbLbtxbNOKEQhYOlEo6bx5G95gdSuJ4ap1DPiCqy
+\restrict 0OzuvQ0M7FwqRpAWt6DxGIAXUS6rxKd3emsVuOSFdOWjlAywQ1G0uIVQzObkbTJ
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -74,6 +74,40 @@ ALTER SEQUENCE public.item_events_id_seq OWNED BY public.item_events.id;
 
 
 --
+-- Name: item_files; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.item_files (
+    id bigint NOT NULL,
+    item_id bigint,
+    item_submission_id bigint,
+    file_data jsonb,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    CONSTRAINT not_detached CHECK (((item_id IS NULL) <> (item_submission_id IS NULL)))
+);
+
+
+--
+-- Name: item_files_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.item_files_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: item_files_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.item_files_id_seq OWNED BY public.item_files.id;
+
+
+--
 -- Name: item_integrations; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -84,6 +118,41 @@ CREATE TABLE public.item_integrations (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL
 );
+
+
+--
+-- Name: item_submissions; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.item_submissions (
+    id bigint NOT NULL,
+    item_id bigint NOT NULL,
+    submitter_id bigint NOT NULL,
+    submitted_digitally boolean DEFAULT false NOT NULL,
+    instructions text,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    CONSTRAINT physical_requires_instructions CHECK ((NOT ((instructions IS NULL) AND (submitted_digitally = false))))
+);
+
+
+--
+-- Name: item_submissions_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.item_submissions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: item_submissions_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.item_submissions_id_seq OWNED BY public.item_submissions.id;
 
 
 --
@@ -165,7 +234,6 @@ CREATE TABLE public.items (
     updated_at timestamp without time zone NOT NULL,
     list_category_id bigint,
     status public.item_status,
-    submission_summary text,
     points_text text,
     points_value integer,
     digital_submission boolean NOT NULL,
@@ -696,6 +764,20 @@ ALTER TABLE ONLY public.item_events ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: item_files id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.item_files ALTER COLUMN id SET DEFAULT nextval('public.item_files_id_seq'::regclass);
+
+
+--
+-- Name: item_submissions id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.item_submissions ALTER COLUMN id SET DEFAULT nextval('public.item_submissions_id_seq'::regclass);
+
+
+--
 -- Name: item_tags id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -823,11 +905,35 @@ ALTER TABLE ONLY public.item_events
 
 
 --
+-- Name: item_files item_files_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.item_files
+    ADD CONSTRAINT item_files_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: item_integrations item_integrations_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.item_integrations
     ADD CONSTRAINT item_integrations_pkey PRIMARY KEY (type, item_id);
+
+
+--
+-- Name: item_submissions item_submissions_item_id_key; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.item_submissions
+    ADD CONSTRAINT item_submissions_item_id_key UNIQUE (item_id);
+
+
+--
+-- Name: item_submissions item_submissions_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.item_submissions
+    ADD CONSTRAINT item_submissions_pkey PRIMARY KEY (id);
 
 
 --
@@ -1154,11 +1260,43 @@ ALTER TABLE ONLY public.item_events
 
 
 --
+-- Name: item_files item_files_item_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.item_files
+    ADD CONSTRAINT item_files_item_id_fkey FOREIGN KEY (item_id) REFERENCES public.items(id);
+
+
+--
+-- Name: item_files item_files_item_submission_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.item_files
+    ADD CONSTRAINT item_files_item_submission_id_fkey FOREIGN KEY (item_submission_id) REFERENCES public.item_submissions(id);
+
+
+--
 -- Name: item_integrations item_integrations_item_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.item_integrations
     ADD CONSTRAINT item_integrations_item_id_fkey FOREIGN KEY (item_id) REFERENCES public.items(id);
+
+
+--
+-- Name: item_submissions item_submissions_item_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.item_submissions
+    ADD CONSTRAINT item_submissions_item_id_fkey FOREIGN KEY (item_id) REFERENCES public.items(id);
+
+
+--
+-- Name: item_submissions item_submissions_submitter_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.item_submissions
+    ADD CONSTRAINT item_submissions_submitter_id_fkey FOREIGN KEY (submitter_id) REFERENCES public.users(id);
 
 
 --
@@ -1365,5 +1503,5 @@ ALTER TABLE ONLY public.team_users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict qoMq8cJVqPZdbyb0lTSBpaPqbLbtxbNOKEQhYOlEo6bx5G95gdSuJ4ap1DPiCqy
+\unrestrict 0OzuvQ0M7FwqRpAWt6DxGIAXUS6rxKd3emsVuOSFdOWjlAywQ1G0uIVQzObkbTJ
 
