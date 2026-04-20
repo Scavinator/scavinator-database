@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 0OzuvQ0M7FwqRpAWt6DxGIAXUS6rxKd3emsVuOSFdOWjlAywQ1G0uIVQzObkbTJ
+\restrict uTcU8a4LSRgho3XHXtWHDjpCP8c0A0r1yoFK9R04TbXahZSqIR51PcvjpjxmtTo
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -271,7 +271,8 @@ CREATE TABLE public.list_categories (
     team_id bigint,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    slug text NOT NULL
+    slug text NOT NULL,
+    color text
 );
 
 
@@ -1503,5 +1504,5 @@ ALTER TABLE ONLY public.team_users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 0OzuvQ0M7FwqRpAWt6DxGIAXUS6rxKd3emsVuOSFdOWjlAywQ1G0uIVQzObkbTJ
+\unrestrict uTcU8a4LSRgho3XHXtWHDjpCP8c0A0r1yoFK9R04TbXahZSqIR51PcvjpjxmtTo
 
