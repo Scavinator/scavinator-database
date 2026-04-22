@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict uTcU8a4LSRgho3XHXtWHDjpCP8c0A0r1yoFK9R04TbXahZSqIR51PcvjpjxmtTo
+\restrict 44JtyANQBSteB127sOc40VxyZctYnLB96mPYZhPTGekk4fNykfZYfHXgFTHkrN3
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -460,7 +460,9 @@ CREATE TABLE public.team_auths (
     created_for_url text,
     key text NOT NULL,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    create_account boolean DEFAULT false NOT NULL,
+    ui_password boolean DEFAULT false NOT NULL
 );
 
 
@@ -626,12 +628,13 @@ ALTER SEQUENCE public.team_scav_hunts_id_seq OWNED BY public.team_scav_hunts.id;
 CREATE TABLE public.team_tags (
     id bigint NOT NULL,
     name text NOT NULL,
-    enabled boolean DEFAULT false NOT NULL,
+    enabled boolean DEFAULT true NOT NULL,
     color text,
     team_id bigint NOT NULL,
     team_role_id bigint,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    requires_approval boolean DEFAULT false NOT NULL
 );
 
 
@@ -1504,5 +1507,5 @@ ALTER TABLE ONLY public.team_users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict uTcU8a4LSRgho3XHXtWHDjpCP8c0A0r1yoFK9R04TbXahZSqIR51PcvjpjxmtTo
+\unrestrict 44JtyANQBSteB127sOc40VxyZctYnLB96mPYZhPTGekk4fNykfZYfHXgFTHkrN3
 
