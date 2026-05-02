@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 44JtyANQBSteB127sOc40VxyZctYnLB96mPYZhPTGekk4fNykfZYfHXgFTHkrN3
+\restrict DjcloFUEWoYesNzpg1t5SkbbNBAtn2o8ueXZUqexhHWlkRmKU4WCeNf1Zitfbvq
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -233,11 +233,11 @@ CREATE TABLE public.items (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     list_category_id bigint,
-    status public.item_status,
     points_text text,
     points_value integer,
     digital_submission boolean NOT NULL,
     special_formatting boolean NOT NULL,
+    status public.item_status,
     CONSTRAINT list_category_or_page_number CHECK ((NOT ((page_number IS NULL) AND (list_category_id IS NULL))))
 );
 
@@ -737,7 +737,12 @@ CREATE TABLE public.users (
     admin boolean DEFAULT false NOT NULL,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    discord_id text
+    discord_id text,
+    pronouns text,
+    about_me text,
+    avatar_data jsonb,
+    team_contact text,
+    emergency_contact text
 );
 
 
@@ -1507,5 +1512,5 @@ ALTER TABLE ONLY public.team_users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 44JtyANQBSteB127sOc40VxyZctYnLB96mPYZhPTGekk4fNykfZYfHXgFTHkrN3
+\unrestrict DjcloFUEWoYesNzpg1t5SkbbNBAtn2o8ueXZUqexhHWlkRmKU4WCeNf1Zitfbvq
 
