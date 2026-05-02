@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict DjcloFUEWoYesNzpg1t5SkbbNBAtn2o8ueXZUqexhHWlkRmKU4WCeNf1Zitfbvq
+\restrict gOh8V1HPfajPDekK4bAd3xdkNTW0jEA8ya4UMMDMwNSAV3zr8jfMCEY9DOUL0A1
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -25,15 +25,6 @@ SET row_security = off;
 
 CREATE TYPE public.integration_type AS ENUM (
     'discord'
-);
-
-
---
--- Name: item_status; Type: TYPE; Schema: public; Owner: -
---
-
-CREATE TYPE public.item_status AS ENUM (
-    'box'
 );
 
 
@@ -127,12 +118,14 @@ CREATE TABLE public.item_integrations (
 CREATE TABLE public.item_submissions (
     id bigint NOT NULL,
     item_id bigint NOT NULL,
-    submitter_id bigint NOT NULL,
+    submitter_id bigint,
     submitted_digitally boolean DEFAULT false NOT NULL,
     instructions text,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    CONSTRAINT physical_requires_instructions CHECK ((NOT ((instructions IS NULL) AND (submitted_digitally = false))))
+    submitter_discord_id text,
+    CONSTRAINT physical_requires_instructions CHECK ((NOT ((instructions IS NULL) AND (submitted_digitally = false)))),
+    CONSTRAINT submitter_exists CHECK ((NOT ((submitter_id IS NULL) AND (submitter_discord_id IS NULL))))
 );
 
 
@@ -237,7 +230,6 @@ CREATE TABLE public.items (
     points_value integer,
     digital_submission boolean NOT NULL,
     special_formatting boolean NOT NULL,
-    status public.item_status,
     CONSTRAINT list_category_or_page_number CHECK ((NOT ((page_number IS NULL) AND (list_category_id IS NULL))))
 );
 
@@ -1512,5 +1504,5 @@ ALTER TABLE ONLY public.team_users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict DjcloFUEWoYesNzpg1t5SkbbNBAtn2o8ueXZUqexhHWlkRmKU4WCeNf1Zitfbvq
+\unrestrict gOh8V1HPfajPDekK4bAd3xdkNTW0jEA8ya4UMMDMwNSAV3zr8jfMCEY9DOUL0A1
 
