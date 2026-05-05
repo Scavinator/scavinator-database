@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 1DBxpJtBK4YsUuwNIo3Nx6R6pgCpbWfauXuiQcb92WWufoaJtUKEpfANgDFr3Ag
+\restrict UZfyDaEBOWtcLbR7ugyd32NOyAY4XmnNjADpMRki3rEusw072CgcqmcJeTQkosm
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -26,6 +26,58 @@ SET row_security = off;
 CREATE TYPE public.integration_type AS ENUM (
     'discord'
 );
+
+
+--
+-- Name: notify_item_submission_update(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.notify_item_submission_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+    DECLARE
+    row RECORD;
+    output TEXT;
+    
+    BEGIN
+    -- Checking the Operation Type
+    IF (TG_OP = 'DELETE') THEN
+      row = OLD;
+    ELSE
+      row = NEW;
+    END IF;
+
+    PERFORM pg_notify('item_updates', row.item_id::text);
+
+    RETURN NULL;
+    END;
+$$;
+
+
+--
+-- Name: notify_item_update(); Type: FUNCTION; Schema: public; Owner: -
+--
+
+CREATE FUNCTION public.notify_item_update() RETURNS trigger
+    LANGUAGE plpgsql
+    AS $$
+    DECLARE
+    row RECORD;
+    output TEXT;
+    
+    BEGIN
+    -- Checking the Operation Type
+    IF (TG_OP = 'DELETE') THEN
+      row = OLD;
+    ELSE
+      row = NEW;
+    END IF;
+
+    PERFORM pg_notify('item_updates', row.id::text);
+
+    RETURN NULL;
+    END;
+$$;
 
 
 SET default_tablespace = '';
@@ -1253,6 +1305,20 @@ CREATE UNIQUE INDEX team_scav_hunt_list_category_item_number_unique ON public.it
 
 
 --
+-- Name: item_submissions item_submission_update_notify; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER item_submission_update_notify AFTER INSERT OR DELETE OR UPDATE ON public.item_submissions FOR EACH ROW EXECUTE FUNCTION public.notify_item_submission_update();
+
+
+--
+-- Name: items item_update_notify; Type: TRIGGER; Schema: public; Owner: -
+--
+
+CREATE TRIGGER item_update_notify AFTER INSERT OR UPDATE ON public.items FOR EACH ROW EXECUTE FUNCTION public.notify_item_update();
+
+
+--
 -- Name: item_events item_events_item_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -1504,5 +1570,5 @@ ALTER TABLE ONLY public.team_users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 1DBxpJtBK4YsUuwNIo3Nx6R6pgCpbWfauXuiQcb92WWufoaJtUKEpfANgDFr3Ag
+\unrestrict UZfyDaEBOWtcLbR7ugyd32NOyAY4XmnNjADpMRki3rEusw072CgcqmcJeTQkosm
 
