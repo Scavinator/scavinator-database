@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict UZfyDaEBOWtcLbR7ugyd32NOyAY4XmnNjADpMRki3rEusw072CgcqmcJeTQkosm
+\restrict gWkBUfLqxgUUNRcGa2ZLmI3RcwIdmvwnaniDAUq6vxAQtcPeChKmo5DzCE65WGK
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -176,7 +176,6 @@ CREATE TABLE public.item_submissions (
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     submitter_discord_id text,
-    CONSTRAINT physical_requires_instructions CHECK ((NOT ((instructions IS NULL) AND (submitted_digitally = false)))),
     CONSTRAINT submitter_exists CHECK ((NOT ((submitter_id IS NULL) AND (submitter_discord_id IS NULL))))
 );
 
@@ -1570,5 +1569,5 @@ ALTER TABLE ONLY public.team_users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict UZfyDaEBOWtcLbR7ugyd32NOyAY4XmnNjADpMRki3rEusw072CgcqmcJeTQkosm
+\unrestrict gWkBUfLqxgUUNRcGa2ZLmI3RcwIdmvwnaniDAUq6vxAQtcPeChKmo5DzCE65WGK
 
