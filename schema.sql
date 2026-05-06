@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict gWkBUfLqxgUUNRcGa2ZLmI3RcwIdmvwnaniDAUq6vxAQtcPeChKmo5DzCE65WGK
+\restrict SgioTe3J4BvTu5SNfmBe9IkYvhT7FdI3zMh7h4RSGdFfkGzznHsQAgsWmCebaUM
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -641,7 +641,8 @@ CREATE TABLE public.team_scav_hunts (
     discord_items_message_id text,
     discord_pages_message_id text,
     created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    digital_submission_link text
 );
 
 
@@ -1569,5 +1570,5 @@ ALTER TABLE ONLY public.team_users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict gWkBUfLqxgUUNRcGa2ZLmI3RcwIdmvwnaniDAUq6vxAQtcPeChKmo5DzCE65WGK
+\unrestrict SgioTe3J4BvTu5SNfmBe9IkYvhT7FdI3zMh7h4RSGdFfkGzznHsQAgsWmCebaUM
 
