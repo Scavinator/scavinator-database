@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict SgioTe3J4BvTu5SNfmBe9IkYvhT7FdI3zMh7h4RSGdFfkGzznHsQAgsWmCebaUM
+\restrict 6XHDTON0UCXyhG170eCyUUfiUsa3x8nezwrZTpeb2T9ePJTZbEo0LW4HAdGCMCO
 
 -- Dumped from database version 18.3
 -- Dumped by pg_dump version 18.3
@@ -678,7 +678,8 @@ CREATE TABLE public.team_tags (
     team_role_id bigint,
     created_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    requires_approval boolean DEFAULT false NOT NULL
+    requires_approval boolean DEFAULT false NOT NULL,
+    pinned integer
 );
 
 
@@ -1570,5 +1571,5 @@ ALTER TABLE ONLY public.team_users
 -- PostgreSQL database dump complete
 --
 
-\unrestrict SgioTe3J4BvTu5SNfmBe9IkYvhT7FdI3zMh7h4RSGdFfkGzznHsQAgsWmCebaUM
+\unrestrict 6XHDTON0UCXyhG170eCyUUfiUsa3x8nezwrZTpeb2T9ePJTZbEo0LW4HAdGCMCO
 
